@@ -8,6 +8,8 @@ function AddEquation()
 	leftOp.id = 'leftOp' + index;
 	leftOp.type = 'numeric';
 	leftOp.value = 0;
+	leftOp.addEventListener('change', CalculateResults);
+	leftOp.addEventListener('focus', function () { this.select(); })
 
 	var spnX = document.createElement('span');
 	spnX.innerHTML = ' x ';
@@ -16,6 +18,8 @@ function AddEquation()
 	rightOp.id = 'rightOp' + index;
 	rightOp.type = 'numeric';
 	rightOp.value = 0;
+	rightOp.addEventListener('change', CalculateResults);
+	rightOp.addEventListener('focus', function () { this.select(); })
 
 	var spnE = document.createElement('span');
 	spnE.innerHTML = ' = ';
@@ -23,7 +27,7 @@ function AddEquation()
 	var result = document.createElement('input');
 	result.id = 'result' + index;
 	result.type = 'text';
-	result.readonly = true;
+	result.readOnly = true;
 	result.value = '0';
 
 	var div = document.createElement('div');
@@ -35,6 +39,8 @@ function AddEquation()
 	div.appendChild(result);
 
 	equations.push({ left: leftOp, right: rightOp, result: result });
+	
+	leftOp.focus();
 }
 
 function CalculateResults()
@@ -46,6 +52,8 @@ function CalculateResults()
 
 		if (!isNaN(leftVal) && !isNaN(rightVal)) {
 			eq.result.value = leftVal * rightVal;
+		} else {
+			eq.result.value = 'Invalid';
 		}
 	}	
 }
