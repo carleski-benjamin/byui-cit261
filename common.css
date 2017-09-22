@@ -1,0 +1,39 @@
+html, body {
+	font-family: "Segoe UI",Arial,sans-serif;
+}
+
+td, th {
+	padding: 4px 40px 4px 4px;
+}
+
+input:read-only {
+	background-color: #cccccc;
+	border: 1px solid #aaaaaa;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #070;
+	width: 100%;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: #efe;
+	font-weight: bold;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+	text-transform: uppercase;
+}
+
+li a:hover {
+    background-color: #030;
+}
