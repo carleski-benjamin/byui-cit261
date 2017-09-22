@@ -9,10 +9,16 @@ function AddEquation()
 	leftOp.type = 'numeric';
 	leftOp.value = 0;
 
+	var spnX = document.createElement('span');
+	spnX.innerHTML = ' x ';
+
 	var rightOp = document.createElement('input');
 	rightOp.id = 'rightOp' + index;
 	rightOp.type = 'numeric';
 	rightOp.value = 0;
+
+	var spnE = document.createElement('span');
+	spnE.innerHTML = ' = ';
 
 	var result = document.createElement('input');
 	result.id = 'result' + index;
@@ -23,7 +29,9 @@ function AddEquation()
 	var div = document.createElement('div');
 	equationList.appendChild(div);
 	div.appendChild(leftOp);
+	div.appendChild(spnX);
 	div.appendChild(rightOp);
+	div.appendChild(spnE);
 	div.appendChild(result);
 
 	equations.push({ left: leftOp, right: rightOp, result: result });
