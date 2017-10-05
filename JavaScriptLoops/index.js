@@ -8,7 +8,7 @@ function AddEquation()
 	leftOp.id = 'leftOp' + index;
 	leftOp.type = 'numeric';
 	leftOp.value = 0;
-	leftOp.addEventListener('change', CalculateResults);
+	leftOp.addEventListener('change', function() { CalculateResults(index) });
 	leftOp.addEventListener('focus', function () { this.select(); })
 
 	var spnX = document.createElement('span');
@@ -18,7 +18,7 @@ function AddEquation()
 	rightOp.id = 'rightOp' + index;
 	rightOp.type = 'numeric';
 	rightOp.value = 0;
-	rightOp.addEventListener('change', CalculateResults);
+	rightOp.addEventListener('change', function() { CalculateResults(index) });
 	rightOp.addEventListener('focus', function () { this.select(); })
 
 	var spnE = document.createElement('span');
@@ -39,16 +39,19 @@ function AddEquation()
 	div.appendChild(result);
 
 	equations.push({ left: leftOp, right: rightOp, result: result });
-	
+
 	leftOp.focus();
 }
 
-function CalculateResults()
+function CalculateResults(index)
 {
-	for (var i = 0; i < equations.length; i++) {
+	var min = typeof(index) !== 'number' ? 0 : index;
+	var max = typeof(index) !== 'number' ? equations.length - 1 : index;
+
+	for (var i = min; i <= max; i++) {
 		var eq = equations[i];
-		var leftVal = parseFloat(eq.left.value);
-		var rightVal = parseFloat(eq.right.value);
+		var leftVal = parseFloat(eq['left'].value);
+		var rightVal = parseFloat(eq["right"].value);
 
 		if (!isNaN(leftVal) && !isNaN(rightVal)) {
 			eq.result.value = leftVal * rightVal;
