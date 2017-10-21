@@ -3,6 +3,10 @@ var posts = null;
 var postMap = {};
 var comments = null;
 var postListDiv = null;
+var postTitlePrefix = 'POST: ';
+var commentTitlePrefix = 'COMMENT: ';
+var wrapCommentsInBox = true;
+var linkAuthorEmail = true;
 
 function requestPage(relativeUrl, content, success, error) {
     if (typeof(relativeUrl) !== 'string') return;
@@ -43,7 +47,7 @@ function loadPosts(data) {
         posts[i] = post;
     }
 
-    if (comments !== null) showPostsAndComments();
+    if (comments !== null) matchAndShow();
 }
 
 function loadComments(data) {
@@ -54,11 +58,11 @@ function loadComments(data) {
         comments[i] = new Comment(comments[i]);
     }
 
-    if (posts !== null) showPostsAndComments();
+    if (posts !== null) matchAndShow();
 }
 
-function showPostsAndComments() {
-    console.log('Showing Posts and Comments');
+function matchAndShow() {
+    console.log('Matching Posts and Comments');
     for (var i = 0; i < comments.length; i++) {
         var comment = comments[i];
         var post = postMap[comment.postId];
@@ -69,6 +73,11 @@ function showPostsAndComments() {
         }
     }
 
+	showPostsAndComments();
+}
+
+function showPostsAndComments() {
+    console.log('Showing Posts and Comments');
     postListDiv.innerHTML = '';
     for (var i = 0; i < posts.length; i++) {
 		postListDiv.appendChild(posts[i].getPostElement());
@@ -110,14 +119,14 @@ function TitledBody(id, title, body, className) {
 	me.body = body || '';
 	me.className = className || 'element';
 
-	me.getElement = function (includeBody) {
+	me.getElement = function (titlePrefix, includeBody) {
 		var elem = document.createElement('div');
 		elem.className = me.className;
 		elem.id = me.className + me.id;
 		
 		var ttl = document.createElement('div');
 		ttl.className = me.className + '-title';
-		ttl.textContent = typeof(me.title) === 'function' ? me.title() : me.title;
+		ttl.textContent = titlePrefix + (typeof(me.title) === 'function' ? me.title() : me.title);
 		elem.appendChild(ttl);
 		
 		if (includeBody) elem.appendChild(me.getBodyElement());
@@ -144,17 +153,23 @@ function Post(rawPost) {
     me.user = null;
 
 	me.getPostElement = function () {
-		var elem = me.getElement(true);
+		var elem = me.getElement(postTitlePrefix, true);
 
 		if (me.comments && me.comments.length) {
-			var lst = document.createElement('div');
-			lst.className = 'comments-list';
+			var lst = null;
+
+			if (wrapCommentsInBox) {
+				lst = document.createElement('div');
+				lst.className = 'comments-list';
+			} else {
+				lst = elem;
+			}
 
 			for (var i = 0; i < me.comments.length; i++) {
 				lst.appendChild(me.comments[i].getCommentElement());
 			}
 			
-			elem.appendChild(lst);
+			if (wrapCommentsInBox) elem.appendChild(lst);
 		}
 		
 		return elem;
@@ -175,14 +190,14 @@ function Comment(rawComment) {
     me.post = null;
 
 	me.getCommentElement = function () {
-		var elem = me.getElement(true);
+		var elem = me.getElement(commentTitlePrefix, true);
 		var name = document.createElement('div');
 		name.className = 'comment-name';
 		name.innerHTML = 'By ';
 		
-		var email = document.createElement('a');
+		var email = document.createElement(linkAuthorEmail ? 'a' : 'span');
 		email.className = 'comment-email';
-		email.href = 'mailto:' + me.email;
+		if (linkAuthorEmail) email.href = 'mailto:' + me.email;
 		email.textContent = me.email;
 		name.appendChild(email);
 		
@@ -198,6 +213,71 @@ function showError(error) {
     postListDiv.innerHTML = 'Could not load the posts - ' + error;
 }
 
+function showPreferences(hide) {
+	document.getElementById('showPreferencesBar').style.display = hide ? "block" : "none";
+	document.getElementById('preferencesContainer').style.display = hide ? "none" : "block";
+}
+
+function loadPreferences() {
+	try
+	{
+		if (typeof(Storage) !== 'undefined') {
+			var styleIndex = localStorage.getItem("selected-style");
+			if (styleIndex && /^[1-3]$/.test(styleIndex)) {
+				document.getElementById('styleSelect').value = styleIndex;
+			}
+
+			var prefixesStr = localStorage.getItem("prefixes");
+			if (prefixesStr) {
+				var prefixes = JSON.parse(prefixesStr);
+				document.getElementById('postPrefix').value = prefixes['post'];
+				document.getElementById('commentPrefix').value = prefixes['comment'];
+			}
+
+			var booleansStr = localStorage.getItem("booleans");
+			if (booleansStr) {
+				var booleans = JSON.parse(booleansStr);
+				document.getElementById('wrapComments').checked = booleans[0];
+				document.getElementById('linkAuthor').checked = booleans[1];
+			}
+		}
+	}
+	catch (e)
+	{
+		console.error(e);
+	}
+
+	showPreferences(true);
+}
+
+function applyPreferences() {
+	var val = document.getElementById('styleSelect').value;
+	postTitlePrefix = document.getElementById('postPrefix').value;
+	commentTitlePrefix = document.getElementById('commentPrefix').value;
+	wrapCommentsInBox = document.getElementById('wrapComments').checked;
+	linkAuthorEmail = document.getElementById('linkAuthor').checked;
+
+	document.styleSheets[1].disabled = (val != '1');
+	document.styleSheets[2].disabled = (val != '2');
+	document.styleSheets[3].disabled = (val != '3');
+
+	try
+	{
+		if (typeof(Storage) !== 'undefined') {
+			localStorage.setItem("selected-style", val);
+			localStorage.setItem("prefixes", JSON.stringify({post:postTitlePrefix,comment:commentTitlePrefix}));
+			localStorage.setItem("booleans", JSON.stringify([wrapCommentsInBox,linkAuthorEmail]));
+		}
+	}
+	catch (e)
+	{
+		console.error(e);
+	}
+
+	showPreferences(true);
+    if (posts !== null && comments !== null) showPostsAndComments();
+}
+
 function handleContentLoaded() {
     console.log('ContentLoaded');
     postListDiv = document.getElementById('postList');
@@ -206,6 +286,8 @@ function handleContentLoaded() {
 		requestPage('/posts', loadPosts);
 		requestPage('/comments', loadComments);
 	}, 4000);
+	loadPreferences();
+	applyPreferences();
 }
 
 document.addEventListener("DOMContentLoaded", handleContentLoaded);

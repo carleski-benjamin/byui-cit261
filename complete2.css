@@ -1,0 +1,41 @@
+div.post {
+    margin-top: 12px;
+    margin-bottom: 16px;
+    border: 1px solid #aaeeaa;
+    padding: 8px;
+    border-radius: 16px;
+}
+
+div.post-title {
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+div.comments-list {
+    margin: 16px;
+    border: 1px solid #99bb99;
+    padding: 8px;
+    border-radius: 16px;
+    background-color: #aaccaa;
+}
+
+div.comment {
+    margin: 8px 0;
+    border: 1px solid #669966;
+    border-radius: 16px;
+    padding: 8px;
+    background-color: #ddffdd;
+	font-size: 0.9em;
+}
+
+div.comment-title {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+div.comment-name {
+    width: 100%;
+    text-align: right;
+    font-style: italic;
+    font-size: 0.8em;
+}

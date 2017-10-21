@@ -1,0 +1,39 @@
+div.post {
+    margin-top: 12px;
+    margin-bottom: 16px;
+    border: 1px solid #aaaadd;
+    padding: 4px;
+}
+
+div.post-title {
+    font-size: 1.4em;
+    font-weight: bold;
+	font-style: italic;
+}
+
+div.comments-list {
+    margin: 8px;
+    border: 1px solid #8888bb;
+    padding: 4px;
+    background-color: #9999cc;
+}
+
+div.comment {
+    margin: 4px 0;
+    border: 1px solid #666699;
+    padding: 4px;
+    background-color: #ccccff;
+	font-size: 0.9em;
+}
+
+div.comment-title {
+    font-size: 1.2em;
+    font-weight: bold;
+	font-style: italic;
+}
+
+div.comment-name {
+    width: 100%;
+    text-align: right;
+    font-size: 0.8em;
+}
