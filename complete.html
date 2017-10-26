@@ -3,6 +3,9 @@
 	<head>
 		<title>Complete, Integrated Example</title>
 		<link rel="stylesheet" type="text/css" href="common.css">
+		<link rel="stylesheet" type="text/css" href="complete1.css">
+		<link rel="stylesheet" type="text/css" href="complete2.css">
+		<link rel="stylesheet" type="text/css" href="complete3.css">
 		<script type="text/javascript" src="complete.js"></script>
 	</head>
 	<body>
@@ -24,6 +27,42 @@
 			<li><a href="/CSS3Animations" title="CSS3 Animations">CSS-Animation</a></li>
 		</ul>
 		<h1>Integrated Example</h1>
+		<div style="width: 100%" id="showPreferencesBar">
+			<div style="float:right">
+				<button onclick="showPreferences()">Preferences</button>
+			</div>
+			<div style="clear: both"></div>
+		</div>
+		<div style="display:none" id="preferencesContainer">
+			<div>
+				<label for="styleSelect">Select your style:</label>
+				<select onchange="setStyle()" id="styleSelect">
+					<option value="1">Gray</option>
+					<option value="2">Green</option>
+					<option value="3">Blue</option>
+				</select>
+			</div>
+			<div>
+				<label for="postPrefix">Post title prefix:</label>
+				<input type='text' id='postPrefix' value='POST: ' />
+			</div>
+			<div>
+				<label for="commentPrefix">Comment title prefix:</label>
+				<input type='text' id='commentPrefix' value='COMMENT: ' />
+			</div>
+			<div>
+				<label for="wrapComments">Wrap comments:</label>
+				<input type='checkbox' id='wrapComments' checked />
+			</div>
+			<div>
+				<label for="linkAuthor">Link author:</label>
+				<input type='checkbox' id='linkAuthor' checked />
+			</div>
+			<div>
+				<button onclick="loadPreferences()">Cancel</button>
+				<button onclick="applyPreferences()">Save</button>
+			</div>
+		</div>
 		<div id="postList" class="post-list">Loading posts...</div>
 	</body>
 </html>
