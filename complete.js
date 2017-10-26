@@ -37,6 +37,90 @@ function requestPage(relativeUrl, content, success, error) {
     }
 }
 
+function loadContent(contentType, postLoadMethod) {
+	var contentLoaded = false;
+
+	try
+	{
+		if (typeof(Storage) !== 'undefined') {
+			var storageString = localStorage.getItem(contentType + '-content-ids');
+			if (storageString) {
+				var ids = JSON.parse(storageString);
+				
+				if (ids && ids.length) {
+					var items = [];
+					
+					for (var i = 0; i < ids.length; i++) {
+						var itemStr = localStorage.getItem(contentType + '-content-item-' + ids[i]);
+						
+						if (itemStr) {
+							var item = JSON.parse(itemStr);
+							if (item) items.push(item);
+						}
+					}
+
+					contentLoaded = true;
+					postLoadMethod(items);
+				}
+			}
+		}
+	}
+	catch (e)
+	{
+		console.error('loadContent Error - ' + e);
+	}
+
+	if (!contentLoaded) requestPage('/' + contentType, function (data) { saveContent(contentType, data); postLoadMethod(data); });
+}
+
+function saveContent(contentType, data) {
+	try
+	{
+		if (typeof(Storage) !== 'undefined' && data && data.length) {
+			var ids = [];
+			for (var i = 0; i < data.length; i++) {
+				var item = data[i];
+				if (item && item.id) {
+					ids.push(item.id);
+					localStorage.setItem(contentType + '-content-item-' + item.id, JSON.stringify(item));
+				}
+			}
+			
+			if (ids.length) localStorage.setItem(contentType + '-content-ids', JSON.stringify(ids));
+		}
+	}
+	catch (e)
+	{
+		console.error('saveContent Error - ' + e);
+	}
+}
+
+function removeContent(contentType, id) {
+	try
+	{
+		if (typeof(Storage) !== 'undefined') {
+			localStorage.removeItem(contentType + '-content-item-' + id);
+
+			var storageString = localStorage.getItem(contentType + '-content-ids');
+			if (!storageString) return;
+			
+			var ids = JSON.parse(storageString);
+			
+			if (!ids || !ids.length) return;
+			var idx = ids.indexOf(id);
+
+			if (idx < 0) return;
+			ids.splice(idx, 1);
+			
+			localStorage.setItem(contentType + '-content-ids', JSON.stringify(ids));
+		}
+	}
+	catch (e)
+	{
+		console.error(e);
+	}
+}
+
 function loadPosts(data) {
     console.log('Got Posts');
     posts = data || [];
@@ -88,17 +172,19 @@ function showPostsAndComments() {
 	for (var j = 0; allComments && j < allComments.length; j++) {
 		var comment = allComments[j];
 		var commentId = comment.id;
+		var nodeId = comment.getAttribute('data-node-id');
 		var name = comment.getElementsByClassName('comment-name');
 		name = name && name.length ? name[0] : null;
 		var email = name ? name.getElementsByClassName('comment-email') : null;
 		email = email && email.length ? email[0] : null
 
-		// Simulate finding all comments for the current user, so that they can delete their own comments
-		if (email && /n@/.test(email.innerHTML)) {
+		// Allow users to delete any comment
+		if (email) {
 			var btn = document.createElement('button');
 			btn.innerHTML = 'X';
 			btn.setAttribute('title', 'Delete Comment');
 			btn.setAttribute('data-comment-id', commentId);
+			if (nodeId) btn.setAttribute('data-node-id', nodeId);
 			btn.addEventListener('click', removeComment);
 			name.insertBefore(btn, name.childNodes[0]);
 		}
@@ -107,9 +193,11 @@ function showPostsAndComments() {
 
 function removeComment() {
 	var commentId = this.getAttribute('data-comment-id');
+	var nodeId = this.getAttribute('data-node-id');
 	var comment = commentId ? document.getElementById(commentId) : null;
 	
 	if (comment) comment = comment.parentNode.removeChild(comment);
+	if (nodeId) removeContent('comments', nodeId);
 }
 
 function TitledBody(id, title, body, className) {
@@ -123,6 +211,7 @@ function TitledBody(id, title, body, className) {
 		var elem = document.createElement('div');
 		elem.className = me.className;
 		elem.id = me.className + me.id;
+		elem.setAttribute('data-node-id', me.id);
 		
 		var ttl = document.createElement('div');
 		ttl.className = me.className + '-title';
@@ -283,8 +372,8 @@ function handleContentLoaded() {
     postListDiv = document.getElementById('postList');
 	//Simulate server processing time in loading a complicated pageX
 	setTimeout(function() {
-		requestPage('/posts', loadPosts);
-		requestPage('/comments', loadComments);
+		loadContent('posts', loadPosts);
+		loadContent('comments', loadComments);
 	}, 4000);
 	loadPreferences();
 	applyPreferences();
