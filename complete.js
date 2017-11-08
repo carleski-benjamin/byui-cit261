@@ -179,15 +179,35 @@ function showPostsAndComments() {
 		email = email && email.length ? email[0] : null
 
 		// Allow users to delete any comment
-		if (email) {
+		if (email && /[a-z]@/.test(email.innerHTML)) {
 			var btn = document.createElement('button');
 			btn.innerHTML = 'X';
 			btn.setAttribute('title', 'Delete Comment');
 			btn.setAttribute('data-comment-id', commentId);
+			btn.style.marginRight = '8px';
 			if (nodeId) btn.setAttribute('data-node-id', nodeId);
 			btn.addEventListener('click', removeComment);
 			name.insertBefore(btn, name.childNodes[0]);
 		}
+	}
+	
+	var allPosts = document.getElementsByClassName('post');
+	for (var i = 0; allPosts && i < allPosts.length; i++) {
+		var post = allPosts[i];
+		post.addEventListener('mouseenter', function() {
+			var titles = this ? this.getElementsByClassName('post-title') : null;
+			var title = titles && titles.length ? titles[0] : null;
+			if (title) {
+				title.classList.add('glowingText');
+			}
+		});
+		post.addEventListener('mouseleave', function() {
+			var titles = this ? this.getElementsByClassName('post-title') : null;
+			var title = titles && titles.length ? titles[0] : null;
+			if (title) {
+				title.classList.remove('glowingText');
+			}
+		});
 	}
 }
 
@@ -367,6 +387,25 @@ function applyPreferences() {
     if (posts !== null && comments !== null) showPostsAndComments();
 }
 
+function enterDiv(divId) {
+	var div = document.getElementById(divId);
+	div.className = 'highlight';
+	div.style.fontWeight = 'bold';
+}
+
+function leaveDiv(divId) {
+	var div = document.getElementById(divId);
+	div.className = '';
+	div.style.fontWeight = '';
+}
+
+function validatePrefix(inputId) {
+	var inp = document.getElementById(inputId);
+	var val = inp.value;
+	
+	inp.style.backgroundColor = /[`~!@#$%^&*<>'"]/.test(val) ? '#ffbbbb' : '';
+}
+
 function handleContentLoaded() {
     console.log('ContentLoaded');
     postListDiv = document.getElementById('postList');
@@ -374,7 +413,7 @@ function handleContentLoaded() {
 	setTimeout(function() {
 		loadContent('posts', loadPosts);
 		loadContent('comments', loadComments);
-	}, 4000);
+	}, 2000);
 	loadPreferences();
 	applyPreferences();
 }

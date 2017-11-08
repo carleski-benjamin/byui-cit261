@@ -37,3 +37,22 @@ li a {
 li a:hover {
     background-color: #030;
 }
+
+.growButton {
+	transition: transform 0.3s;
+}
+.growButton:hover {
+	transform: scale(1.2, 1.2) translate(-5%, 0);
+}
+
+.glowingText {
+	text-shadow: 0 0 2px #775511;
+	animation: glowing 1.2s infinite alternate;
+}
+
+@keyFrames glowing {
+	to {
+		text-shadow: 0 0 12px #CCAA33;
+	}
+}
+

@@ -39,3 +39,7 @@ div.comment-name {
     font-style: italic;
     font-size: 0.8em;
 }
+
+div.highlight {
+    background-color: #ddffdd;
+}

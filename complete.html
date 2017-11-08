@@ -20,41 +20,41 @@
 			<li><a href="/CSS3Transforms" title="CSS3 Transforms">CSS-Transform</a></li>
 			<li><a href="/CSS3Animations" title="CSS3 Animations">CSS-Animation</a></li>
 		</ul>
-		<h1>Integrated Example</h1>
+		<h1 class="title">Integrated Example</h1>
 		<div style="width: 100%" id="showPreferencesBar">
 			<div style="float:right">
-				<button onclick="showPreferences()">Preferences</button>
+				<button class="growButton" onclick="showPreferences()">Preferences</button>
 			</div>
 			<div style="clear: both"></div>
 		</div>
 		<div style="display:none" id="preferencesContainer">
-			<div>
+			<div id="styleSelectDiv">
 				<label for="styleSelect">Select your style:</label>
-				<select onchange="setStyle()" id="styleSelect">
+				<select onchange="setStyle()" id="styleSelect" onfocus='enterDiv("styleSelectDiv")' onblur='leaveDiv("styleSelectDiv")'>
 					<option value="1">Gray</option>
 					<option value="2">Green</option>
 					<option value="3">Blue</option>
 				</select>
 			</div>
-			<div>
+			<div id="postPrefixDiv">
 				<label for="postPrefix">Post title prefix:</label>
-				<input type='text' id='postPrefix' value='POST: ' />
+				<input type='text' id='postPrefix' value='POST: ' onfocus='enterDiv("postPrefixDiv")' onblur='leaveDiv("postPrefixDiv")' onchange='validatePrefix("postPrefix")' />
 			</div>
-			<div>
+			<div id="commentPrefixDiv">
 				<label for="commentPrefix">Comment title prefix:</label>
-				<input type='text' id='commentPrefix' value='COMMENT: ' />
+				<input type='text' id='commentPrefix' value='COMMENT: ' onfocus='enterDiv("commentPrefixDiv")' onblur='leaveDiv("commentPrefixDiv")' onchange='validatePrefix("commentPrefix")' />
 			</div>
-			<div>
+			<div id="wrapCommentsDiv">
 				<label for="wrapComments">Wrap comments:</label>
-				<input type='checkbox' id='wrapComments' checked />
+				<input type='checkbox' id='wrapComments' checked onfocus='enterDiv("wrapCommentsDiv")' onblur='leaveDiv("wrapCommentsDiv")' />
 			</div>
-			<div>
+			<div id="linkAuthorDiv">
 				<label for="linkAuthor">Link author:</label>
-				<input type='checkbox' id='linkAuthor' checked />
+				<input type='checkbox' id='linkAuthor' checked onfocus='enterDiv("linkAuthorDiv")' onblur='leaveDiv("linkAuthorDiv")' />
 			</div>
 			<div>
-				<button onclick="loadPreferences()">Cancel</button>
-				<button onclick="applyPreferences()">Save</button>
+				<button class="growButton" onclick="loadPreferences()">Cancel</button>
+				<button class="growButton" onclick="applyPreferences()">Save</button>
 			</div>
 		</div>
 		<div id="postList" class="post-list">Loading posts...</div>

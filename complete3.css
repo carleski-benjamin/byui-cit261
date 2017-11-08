@@ -37,3 +37,7 @@ div.comment-name {
     text-align: right;
     font-size: 0.8em;
 }
+
+div.highlight {
+    background-color: #ccccff;
+}
