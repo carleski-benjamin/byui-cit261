@@ -7,6 +7,8 @@ var postTitlePrefix = 'POST: ';
 var commentTitlePrefix = 'COMMENT: ';
 var wrapCommentsInBox = true;
 var linkAuthorEmail = true;
+var lStorage = window.localStorage;
+var sStorage = window.sessionStorage;
 
 function requestPage(relativeUrl, content, success, error) {
     if (typeof(relativeUrl) !== 'string') return;
@@ -43,7 +45,7 @@ function loadContent(contentType, postLoadMethod) {
 	try
 	{
 		if (typeof(Storage) !== 'undefined') {
-			var storageString = localStorage.getItem(contentType + '-content-ids');
+			var storageString = lStorage.getItem(contentType + '-content-ids');
 			if (storageString) {
 				var ids = JSON.parse(storageString);
 				
@@ -51,7 +53,7 @@ function loadContent(contentType, postLoadMethod) {
 					var items = [];
 					
 					for (var i = 0; i < ids.length; i++) {
-						var itemStr = localStorage.getItem(contentType + '-content-item-' + ids[i]);
+						var itemStr = lStorage.getItem(contentType + '-content-item-' + ids[i]);
 						
 						if (itemStr) {
 							var item = JSON.parse(itemStr);
@@ -82,11 +84,11 @@ function saveContent(contentType, data) {
 				var item = data[i];
 				if (item && item.id) {
 					ids.push(item.id);
-					localStorage.setItem(contentType + '-content-item-' + item.id, JSON.stringify(item));
+					lStorage.setItem(contentType + '-content-item-' + item.id, JSON.stringify(item));
 				}
 			}
 			
-			if (ids.length) localStorage.setItem(contentType + '-content-ids', JSON.stringify(ids));
+			if (ids.length) lStorage.setItem(contentType + '-content-ids', JSON.stringify(ids));
 		}
 	}
 	catch (e)
@@ -99,9 +101,9 @@ function removeContent(contentType, id) {
 	try
 	{
 		if (typeof(Storage) !== 'undefined') {
-			localStorage.removeItem(contentType + '-content-item-' + id);
+			lStorage.removeItem(contentType + '-content-item-' + id);
 
-			var storageString = localStorage.getItem(contentType + '-content-ids');
+			var storageString = lStorage.getItem(contentType + '-content-ids');
 			if (!storageString) return;
 			
 			var ids = JSON.parse(storageString);
@@ -112,7 +114,7 @@ function removeContent(contentType, id) {
 			if (idx < 0) return;
 			ids.splice(idx, 1);
 			
-			localStorage.setItem(contentType + '-content-ids', JSON.stringify(ids));
+			lStorage.setItem(contentType + '-content-ids', JSON.stringify(ids));
 		}
 	}
 	catch (e)
@@ -188,12 +190,14 @@ function showPostsAndComments() {
 			if (nodeId) btn.setAttribute('data-node-id', nodeId);
 			btn.addEventListener('click', removeComment);
 			name.insertBefore(btn, name.childNodes[0]);
+			addCryptoImage(name, email.innerHTML);
 		}
 	}
 	
 	var allPosts = document.getElementsByClassName('post');
 	for (var i = 0; allPosts && i < allPosts.length; i++) {
 		var post = allPosts[i];
+
 		post.addEventListener('mouseenter', function() {
 			var titles = this ? this.getElementsByClassName('post-title') : null;
 			var title = titles && titles.length ? titles[0] : null;
@@ -300,6 +304,14 @@ function Comment(rawComment) {
 
 	me.getCommentElement = function () {
 		var elem = me.getElement(commentTitlePrefix, true);
+		
+		//Simulate embedded content in the dummy posts
+		if (/[onra]@/.test(me.email)) {
+			addMediaElement(elem, 'video', 'http://techslides.com/demos/sample-videos/small.', 'webm', 'video/webm', 'ogg', 'video/ogg', 'mp4', 'video/mp4', '3gp', 'video/3gp');
+		} else if (/[cwel]@/.test(me.email)) {
+			addMediaElement(elem, 'audio', 'https://html5tutorial.info/media/vincent.', 'mp3', 'audio/mpeg', 'ogg', 'audio/ogg');
+		}
+
 		var name = document.createElement('div');
 		name.className = 'comment-name';
 		name.innerHTML = 'By ';
@@ -318,6 +330,69 @@ function Comment(rawComment) {
 Comment.prototype = Object.create(TitledBody.prototype);
 Comment.prototype.constructor = Comment;
 
+function addMediaElement(parentNode, mediaType, baseUrl) {
+	var media = document.createElement(mediaType);
+	media.controls = true;
+	
+	for (var i = 3; (i + 1) < arguments.length; i += 2) {
+		var node = document.createElement('source');
+		node.src = baseUrl + arguments[i];
+		node.type = arguments[i + 1];
+		media.appendChild(node);
+	}
+
+	parentNode.appendChild(media);
+}
+
+function addCryptoImage(parentNode, plaintext) {
+	var words = CryptoJS.SHA512(plaintext).words;
+	var arr = new ArrayBuffer(512);
+	var view = new DataView(arr);
+	for (var i = 0; i < words.length; i++) {
+		view.setUint32(i * 4, words[i], false);
+	}
+	
+	var canvas = document.createElement('canvas');
+	canvas.width = 16;
+	canvas.height = 16;
+	parentNode.appendChild(canvas);
+	
+	var ctx = canvas.getContext('2d');
+	var imgData = ctx.createImageData(16, 16);
+	var dt = imgData.data;
+	for (var col = 0; col < 4; col++) {
+		for (var row = 0; row < 4; row++) {
+			setByte(dt, view, col, row, 0);
+			setByte(dt, view, col, row, 1);
+			setByte(dt, view, col, row, 2);
+			setByte(dt, view, col, row, 3);
+		}
+	}
+
+	ctx.putImageData(imgData, 0, 0);
+}
+
+function setByte(dt, view, col, row, position) {
+	var byt = view.getUint8((col * 4) + (row * 16) + position);
+	var idx = (col * 16) + (row * 256) + position;
+	dt[idx] = byt;
+	dt[idx + 4] = byt;
+	dt[idx + 8] = byt;
+	dt[idx + 12] = byt;
+	dt[idx + 64] = byt;
+	dt[idx + 68] = byt;
+	dt[idx + 72] = byt;
+	dt[idx + 76] = byt;
+	dt[idx + 128] = byt;
+	dt[idx + 132] = byt;
+	dt[idx + 136] = byt;
+	dt[idx + 140] = byt;
+	dt[idx + 192] = byt;
+	dt[idx + 196] = byt;
+	dt[idx + 200] = byt;
+	dt[idx + 204] = byt;
+}
+
 function showError(error) {
     postListDiv.innerHTML = 'Could not load the posts - ' + error;
 }
@@ -331,19 +406,19 @@ function loadPreferences() {
 	try
 	{
 		if (typeof(Storage) !== 'undefined') {
-			var styleIndex = localStorage.getItem("selected-style");
+			var styleIndex = lStorage.getItem("selected-style");
 			if (styleIndex && /^[1-3]$/.test(styleIndex)) {
 				document.getElementById('styleSelect').value = styleIndex;
 			}
 
-			var prefixesStr = localStorage.getItem("prefixes");
+			var prefixesStr = lStorage.getItem("prefixes");
 			if (prefixesStr) {
 				var prefixes = JSON.parse(prefixesStr);
 				document.getElementById('postPrefix').value = prefixes['post'];
 				document.getElementById('commentPrefix').value = prefixes['comment'];
 			}
 
-			var booleansStr = localStorage.getItem("booleans");
+			var booleansStr = lStorage.getItem("booleans");
 			if (booleansStr) {
 				var booleans = JSON.parse(booleansStr);
 				document.getElementById('wrapComments').checked = booleans[0];
@@ -373,9 +448,9 @@ function applyPreferences() {
 	try
 	{
 		if (typeof(Storage) !== 'undefined') {
-			localStorage.setItem("selected-style", val);
-			localStorage.setItem("prefixes", JSON.stringify({post:postTitlePrefix,comment:commentTitlePrefix}));
-			localStorage.setItem("booleans", JSON.stringify([wrapCommentsInBox,linkAuthorEmail]));
+			lStorage.setItem("selected-style", val);
+			lStorage.setItem("prefixes", JSON.stringify({post:postTitlePrefix,comment:commentTitlePrefix}));
+			lStorage.setItem("booleans", JSON.stringify([wrapCommentsInBox,linkAuthorEmail]));
 		}
 	}
 	catch (e)

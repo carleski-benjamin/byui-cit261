@@ -43,3 +43,7 @@ div.comment-name {
 div.highlight {
     background-color: #eeeeee;
 }
+
+.loading-spinner {
+    color: #bbbbbb;
+}

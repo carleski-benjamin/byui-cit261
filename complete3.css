@@ -18,6 +18,7 @@ div.comments-list {
     background-color: #9999cc;
 }
 
+
 div.comment {
     margin: 4px 0;
     border: 1px solid #666699;
@@ -38,6 +39,11 @@ div.comment-name {
     font-size: 0.8em;
 }
 
+
 div.highlight {
     background-color: #ccccff;
+}
+
+.loading-spinner {
+    color: #9999cc;
 }
