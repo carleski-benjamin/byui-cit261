@@ -217,6 +217,14 @@ function refreshDataFromAutoRenew() {
 	refreshData();
 }
 
+function applyButtonTransform(btn) {
+	btn.style.transform = 'scale(0.8, 0.8)';
+}
+
+function removeButtonTransform(btn) {
+	btn.style.transform = 'none';
+}
+
 function contentLoaded() {
 	if (localStorage.autoRefresh === 'true') toggleAutoRefresh();
 	else refreshData();

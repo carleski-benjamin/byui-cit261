@@ -9,8 +9,8 @@
 	<body>
 		<div class='command-area' style='position: absolute; right: 298px; top: 16px'>
 			<div style='position: absolute; left: 0; top: 0; z-index: 100; width: 266px'>
-				<i id='btnAutorenew' class='material-icons' style='font-size: 8em' title='Automatically Refresh' onclick='toggleAutoRefresh()'>autorenew</i>
-				<i id='btnRefresh' class='material-icons' style='font-size: 8em' title='Refresh' onclick='refreshDataFromButton()'>refresh</i>
+				<i id='btnAutorenew' class='material-icons' style='font-size: 8em' title='Automatically Refresh' onclick='toggleAutoRefresh()' onmousedown='applyButtonTransform(this)' onmouseup='removeButtonTransform(this)'>autorenew</i>
+				<i id='btnRefresh' class='material-icons' style='font-size: 8em' title='Refresh' onclick='refreshDataFromButton()' onmousedown='applyButtonTransform(this)' onmouseup='removeButtonTransform(this)'>refresh</i>
 			</div>
 			<div id='commandOverlay' style='position: absolute; left: 0; top: 0; z-index: 999; width: 266px; height: 136px; background-color: rgba(255,255,255,0.7); display: none'>&nbsp;</div>
 		</div>
