@@ -9,8 +9,8 @@ var leadCanvas = 'a';
 
 function getJson(symbol, prices, version) {
 	var url = prices ?
-		('http://testfakestocks.azurewebsites.net/values/stock/' + symbol) :
-		('http://testfakestocks.azurewebsites.net/values/top5');
+		('https://testfakestocks.azurewebsites.net/values/stock/' + symbol) :
+		('https://testfakestocks.azurewebsites.net/values/top5');
 
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
