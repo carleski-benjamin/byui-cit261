@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>CIT 261 Personal Project</title>
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="index.css">
+		<script type="text/javascript" src="index.js"></script>
+	</head>
+	<body>
+		<div class='command-area' style='position: absolute; right: 165px'>
+			<div style='position: absolute; left: 0; top: 0; z-index: 100; width: 133px'>
+				<i id='btnAutorenew' class='material-icons' style='font-size: 4em' title='Automatically Refresh' onclick='toggleAutoRefresh()'>autorenew</i>
+				<i id='btnRefresh' class='material-icons' style='font-size: 4em' title='Refresh' onclick='refreshDataFromButton()'>refresh</i>
+			</div>
+			<div id='commandOverlay' style='position: absolute; left: 0; top: 0; z-index: 999; width: 133px; height: 68px; background-color: rgba(255,255,255,0.7); display: none'>&nbsp;</div>
+		</div>
+		<div class='content' style='position: relative; top: 70px'>
+			<div style='margin-bottom: 32px'><span style='border-bottom: 2px solid orange'>TRENDING STOCKS:</span></div>
+			<div class='stock' id='stock1'>
+				<div class='stock-desc'>
+					<div class='stock-symbol' id='symbol1'><div id='oldSymbol1'></div><div id='newSymbol1'></div></div>
+					<div class='stock-price' id='price1'><div id='oldPrice1'></div><div id='newPrice1'></div></div>
+					<div class='stock-change' id='change1'><div id='oldChange1'></div><div id='newChange1'></div></div>
+				</div>
+				<div class='stock-history'>
+					<canvas width="400" height="40" id='history1a'></canvas>
+					<canvas width="400" height="40" id='history1b'></canvas>
+				</div>
+			</div>
+			<div class='stock' id='stock2'>
+				<div class='stock-desc'>
+					<div class='stock-symbol' id='symbol2'><div id='oldSymbol2'></div><div id='newSymbol2'></div></div>
+					<div class='stock-price' id='price2'><div id='oldPrice2'></div><div id='newPrice2'></div></div>
+					<div class='stock-change' id='change2'><div id='oldChange2'></div><div id='newChange2'></div></div>
+				</div>
+				<div class='stock-history'>
+					<canvas width="400" height="40" id='history2a'></canvas>
+					<canvas width="400" height="40" id='history2b'></canvas>
+				</div>
+			</div>
+			<div class='stock' id='stock3'>
+				<div class='stock-desc'>
+					<div class='stock-symbol' id='symbol3'><div id='oldSymbol3'></div><div id='newSymbol3'></div></div>
+					<div class='stock-price' id='price3'><div id='oldPrice3'></div><div id='newPrice3'></div></div>
+					<div class='stock-change' id='change3'><div id='oldChange3'></div><div id='newChange3'></div></div>
+				</div>
+				<div class='stock-history'>
+					<canvas width="400" height="40" id='history3a'></canvas>
+					<canvas width="400" height="40" id='history3b'></canvas>
+				</div>
+			</div>
+			<div class='stock' id='stock4'>
+				<div class='stock-desc'>
+					<div class='stock-symbol' id='symbol4'><div id='oldSymbol4'></div><div id='newSymbol4'></div></div>
+					<div class='stock-price' id='price4'><div id='oldPrice4'></div><div id='newPrice4'></div></div>
+					<div class='stock-change' id='change4'><div id='oldChange4'></div><div id='newChange4'></div></div>
+				</div>
+				<div class='stock-history'>
+					<canvas width="400" height="40" id='history4a'></canvas>
+					<canvas width="400" height="40" id='history4b'></canvas>
+				</div>
+			</div>
+			<div class='stock' id='stock5'>
+				<div class='stock-desc'>
+					<div class='stock-symbol' id='symbol5'><div id='oldSymbol5'></div><div id='newSymbol5'></div></div>
+					<div class='stock-price' id='price5'><div id='oldPrice5'></div><div id='newPrice5'></div></div>
+					<div class='stock-change' id='change5'><div id='oldChange5'></div><div id='newChange5'></div></div>
+				</div>
+				<div class='stock-history'>
+					<canvas width="400" height="40" id='history5a'></canvas>
+					<canvas width="400" height="40" id='history5b'></canvas>
+				</div>
+			</div>
+		</div>
+		<div id='loadingContainer'><div class='loading-spinner'>Loading...</div></div>
+	</body>
+</html>

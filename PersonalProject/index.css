@@ -1,0 +1,139 @@
+html, body {
+	font-family: "Segoe UI",Arial,sans-serif;
+}
+
+i {
+	cursor: pointer;
+}
+
+.content {
+	font-size: 48px;
+}
+
+.stock {
+	height: 140px;
+	width: 570px;
+	position: relative;
+}
+
+.stock-desc {
+	height: 64px;
+	width: 570px;
+	position: relative;
+}
+
+.stock-symbol {
+	display: inline-block;
+	width: 140px;
+	height: 64px;
+	position: relative;
+	overflow: clip;
+}
+
+.stock-symbol > div {
+	color: blue;
+	font-weight: bold;
+	display: inline-block;
+	position: absolute;
+	width: 140px;
+	height: 64px;
+	top: 0;
+	left: 0;
+	overflow: clip;
+}
+
+.stock-price {
+	display: inline-block;
+	width: 200px;
+	height: 64px;
+	position: relative;
+	overflow: clip;
+}
+
+.stock-price > div {
+	display: inline-block;
+	position: absolute;
+	width: 200px;
+	height: 64px;
+	top: 0;
+	left: 0;
+	text-align: right;
+	overflow: clip;
+}
+
+.stock-change {
+	display: inline-block;
+	width: 200px;
+	height: 64px;
+	position: relative;
+	overflow: clip;
+	left: 16px;
+}
+
+.stock-change > div {
+	display: inline-block;
+	position: absolute;
+	width: 200px;
+	height: 64px;
+	top: 0;
+	left: 0;
+	text-align: left;
+	overflow: clip;
+}
+
+.stock-history {
+	position: relative;
+	left: 70px;
+	height: 40px;
+	width: 400px;
+	border: 1px solid #EEE;
+}
+
+.stock-history > canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+#loadingContainer {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background-color: white;
+	z-index: 999;
+}
+
+.loading-spinner {
+  font-size: 90px;
+  text-indent: -9999em;
+  overflow: hidden;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  margin: 72px auto;
+  position: relative;
+  transform: translateZ(0);
+  animation: spinShadow 1.4s infinite ease, round 1.4s infinite ease;
+}
+
+.spinner {
+	animation: round 1.4s infinite ease;
+}
+
+@keyframes spinShadow {
+  0% { box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em; }
+  5%,
+  95% { box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em; }
+  10%,
+  59% { box-shadow: 0 -0.83em 0 -0.4em, -0.087em -0.825em 0 -0.42em, -0.173em -0.812em 0 -0.44em, -0.256em -0.789em 0 -0.46em, -0.297em -0.775em 0 -0.477em; }
+  20% { box-shadow: 0 -0.83em 0 -0.4em, -0.338em -0.758em 0 -0.42em, -0.555em -0.617em 0 -0.44em, -0.671em -0.488em 0 -0.46em, -0.749em -0.34em 0 -0.477em; }
+  38% { box-shadow: 0 -0.83em 0 -0.4em, -0.377em -0.74em 0 -0.42em, -0.645em -0.522em 0 -0.44em, -0.775em -0.297em 0 -0.46em, -0.82em -0.09em 0 -0.477em; }
+  100% { box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em; }
+}
+@keyframes round {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
