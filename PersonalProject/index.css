@@ -42,6 +42,11 @@ i {
 	overflow: clip;
 }
 
+.stock-symbol > div > a {
+	text-decoration: none;
+	color: inherit;
+}
+
 .stock-price {
 	display: inline-block;
 	width: 200px;

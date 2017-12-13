@@ -80,7 +80,7 @@ function showContent(symbol) {
 			oldSymbol.innerHTML = newSymbol.innerHTML;
 			oldPrice.innerHTML = newPrice.innerHTML;
 			oldChange.innerHTML = newChange.innerHTML;
-			newSymbol.innerHTML = stock.symbol;
+			newSymbol.innerHTML = '<a href="https://www.google.com/search?tbm=fin&q=NASDAQ:+' + stock.symbol + '">' + stock.symbol + '</a>';
 			newPrice.innerHTML = '$' + stock.price.toFixed(2);
 			newChange.innerHTML = (change < 0 ? '' : '+') + change.toFixed(2);
 			drawHistory(newCanvas, stock.history);
