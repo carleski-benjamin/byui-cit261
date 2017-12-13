@@ -71,6 +71,8 @@ function showContent(symbol) {
 			var newPrice = document.getElementById('newPrice' + (i + 1));
 			var oldChange = document.getElementById('oldChange' + (i + 1));
 			var newChange = document.getElementById('newChange' + (i + 1));
+			var oldCanvas = document.getElementById('history' + (i + 1) + (leadCanvas === 'a' ? 'b' : 'a'));
+			var newCanvas = document.getElementById('history' + (i + 1) + leadCanvas);
 			var lastPrice = stock.history[stock.history.length - 2].price;
 			var change = stock.price - lastPrice;
 			var changeColor = change >= 0.01 ? '64,255,64' : (change <= -0.01 ? '255,64,64' : '0,0,0');
@@ -81,40 +83,52 @@ function showContent(symbol) {
 			newSymbol.innerHTML = stock.symbol;
 			newPrice.innerHTML = '$' + stock.price.toFixed(2);
 			newChange.innerHTML = (change < 0 ? '' : '+') + change.toFixed(2);
+			drawHistory(newCanvas, stock.history);
 
 			oldSymbol.style.transition = 'all 0s ease 0s';
 			oldPrice.style.transition = 'all 0s ease 0s';
 			oldChange.style.transition = 'all 0s ease 0s';
+			oldCanvas.style.transition = 'all 0s ease 0s';
 			newSymbol.style.transition = 'all 0s ease 0s';
 			newPrice.style.transition = 'all 0s ease 0s';
 			newChange.style.transition = 'all 0s ease 0s';
+			newCanvas.style.transition = 'all 0s ease 0s';
 
 			oldSymbol.style.color = '#4040FF';
 			oldPrice.style.color = 'black';
 			oldChange.style.color = newChange.style.color;
+			oldCanvas.style.transform = 'scale(1, 1)';
 			newSymbol.style.color = 'rgba(32,32,255,0)';
 			newPrice.style.color = 'rgba(0,0,0,0)';
 			newChange.style.color = 'rgba(' + changeColor + ',0)';
+			newCanvas.style.transform = 'scale(1, 0)';
+			newCanvas.style.display = 'inline';
 
 			setTimeout(function() {
 				oldSymbol.style.transition = 'color 1.7s';
 				oldPrice.style.transition = 'color 1.7s';
 				oldChange.style.transition = 'color 1.7s';
+				oldCanvas.style.transition = 'transform 2.4s';
 				newSymbol.style.transition = 'color 1.7s';
 				newPrice.style.transition = 'color 1.7s';
 				newChange.style.transition = 'color 1.7s';
+				newCanvas.style.transition = 'transform 2.4s';
 
 				oldSymbol.style.color = 'rgba(32,32,255,0)';
 				oldPrice.style.color = 'rgba(0,0,0,0)';
 				oldChange.style.color = 'rgba(' + changeColor + ',0)';
+				oldCanvas.style.transform = 'scale(1, 0)';
 				newSymbol.style.color = '#4040FF';
 				newPrice.style.color = 'black';
 				newChange.style.color = 'rgba(' + changeColor + ',1)';
-			}, 30);
-
-			for (var j = 0; j < stock.history; j++) {
+				newCanvas.style.transform = 'scale(1, 1)';
 				
-			}
+				setTimeout(function() {
+					oldCanvas.style.transition = 'all 0s ease 0s';
+					oldCanvas.style.transform = 'none';
+					oldCanvas.style.display = 'none';
+				}, 2400);
+			}, 30);
 
 			priceLoaded++;
 			if (priceLoaded >= 5 || priceLoaded >= stockResults.length) {
@@ -127,6 +141,35 @@ function showContent(symbol) {
 			}
 		}
 	}
+}
+
+function drawHistory(canvas, hists) {
+	var minPrice = 999999999;
+	var maxPrice = -999999999;
+
+	for (var i = 0; i < 99 && i < hists.length; i++) {
+		var hist = hists[i];
+		if (hist.price < minPrice) minPrice = hist.price;
+		if (hist.price > maxPrice) maxPrice = hist.price;
+	}
+	
+	var range = maxPrice - minPrice;
+	var step = range / 38.0;
+
+	var ctx = canvas.getContext('2d');
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.beginPath();
+
+	for (var i = 0; i < 99 && i < hists.length; i++) {
+		var hist = hists[i];
+		var X = 39.0 - ((hist.price - minPrice) / step);
+
+		if (i === 0) ctx.moveTo(1, X);
+		else ctx.lineTo(1 + (i * 4), X);
+	}
+	
+	ctx.stroke();
+	ctx.closePath();
 }
 
 function toggleAutoRefresh() {
